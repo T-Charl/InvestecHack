@@ -1,20 +1,14 @@
 import {
   Card,
-  CardHeader,
-  CardTitle,
-  CardDescription,
   CardContent,
-  CardFooter,
 } from "@/components/ui/card";
 import {
-  ChartConfig,
   ChartContainer,
   ChartTooltip,
   ChartTooltipContent,
 } from "@/components/ui/chart";
-import { TrendingUp } from "lucide-react";
 import React, { useEffect, useState } from "react";
-import { Pie, PieChart, Label } from "recharts";
+import { Pie, PieChart, Label, Cell } from "recharts";
 
 type Props = {};
 
@@ -32,10 +26,15 @@ const AccountChart = (props: Props) => {
     { category: "Tax Certificates", desktop: 75, mobile: 45 },
   ];
 
-  const getRandomColor = () => {
-    const randomColor = Math.floor(Math.random() * 16777215).toString(16);
-    return `#${randomColor}`;
-  };
+  const colors = [
+    '#ff6384', // red
+    '#36a2eb', // blue
+    '#ffce56', // yellow
+    '#4bc0c0', // teal
+    '#9966ff', // purple
+    '#ff9f40', // orange
+    '#ff4500'  // red-orange
+  ];
 
   const TransactionTable = () => {
     if (!Array.isArray(transactions) || transactions.length === 0) {
@@ -109,7 +108,6 @@ const AccountChart = (props: Props) => {
     fetchData();
   }, []);
 
-
   const chartConfig = {
     visitors: {
       label: "Visitors",
@@ -152,37 +150,37 @@ const AccountChart = (props: Props) => {
                 innerRadius={60}
                 outerRadius={80}
                 strokeWidth={5}
-                fill={chartConfig.desktop.color}
+                labelLine={false}
               >
-                <Label
-                  content={({ viewBox }) => {
-                    if (viewBox && "cx" in viewBox && "cy" in viewBox) {
-                      return (
-                        <text
-                          x={viewBox.cx}
-                          y={viewBox.cy}
-                          textAnchor="middle"
-                          dominantBaseline="middle"
-                        >
-                          <tspan
-                            x={viewBox.cx}
-                            y={(viewBox.cy || 0) + 24}
-                            className="fill-muted-foreground"
-                          >
-                            Balances
-                          </tspan>
-                          <tspan
+                {chartData.map((entry, index) => (
+                  <Label
+                    key={`label-${index}`}
+                    content={({ viewBox }) => {
+                      if (viewBox && "cx" in viewBox && "cy" in viewBox) {
+                        return (
+                          <text
                             x={viewBox.cx}
                             y={viewBox.cy}
-                            className="fill-foreground text-3xl font-bold"
+                            textAnchor="middle"
+                            dominantBaseline="middle"
                           >
-                            R{balance}
-                          </tspan>
-                        </text>
-                      );
-                    }
-                  }}
-                />
+                            <tspan
+                              x={viewBox.cx}
+                              y={viewBox.cy}
+                              className="fill-foreground text-3xl font-bold"
+                            >
+                              R{balance}
+                            </tspan>
+                          </text>
+                        );
+                      }
+                    }}
+                    fill={colors[index % colors.length]} // Assign color based on index
+                  />
+                ))}
+                {chartData.map((entry, index) => (
+  <Cell key={`cell-${index}`} fill={colors[index % colors.length]} />
+))}
               </Pie>
             </PieChart>
           </ChartContainer>

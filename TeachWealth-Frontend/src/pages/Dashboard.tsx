@@ -17,7 +17,7 @@ const Dashboard = (props: Props) => {
 
             // Fetch account balance
             try {
-                const balanceResponse = await fetch(`https://team2.sandboxpay.co.za/za/pb/v1/accounts/${accountId}/balance`, {
+                const balanceResponse = await fetch(`https://team2.sandboxpay.co.za/za/pb/v1/accounts/${accountId}/balance/`, {
                     method: 'GET',
                     headers: {
                         'Authorization': `Bearer ${token}`,
