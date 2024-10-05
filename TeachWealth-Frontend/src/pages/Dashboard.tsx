@@ -28,7 +28,7 @@ const Dashboard = (props: Props) => {
                 if (balanceResponse.ok) {
                     const balanceData = await balanceResponse.json();
                     setCurrentBalance(balanceData.data.currentBalance);
-                    setAvailableBalance(balanceData.data.availableBalance); S
+                    setAvailableBalance(balanceData.data.availableBalance);
                 }
             } catch (error) {
                 console.error("Error fetching balance:", error);
@@ -54,16 +54,16 @@ const Dashboard = (props: Props) => {
                             </div>
                         </div>
                     </div>
-
-
-                    <div>
-
+                </div>
+                <div className='w-[100%] flex flex-col'>
+                    <div className='w-[100%]'>
                         <AccountBalance />
                     </div>
-                    <div>
-                        <Chatbot />
-                    </div>
                 </div>
+
+            </div>
+            <div className='w-[100%]'>
+                <Chatbot/>
             </div>
         </div>
 

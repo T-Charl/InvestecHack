@@ -1,40 +1,63 @@
-import React, { useEffect, useState } from 'react';
-import { createStore } from 'botframework-webchat';  // Only import createStore
-import { DirectLine } from 'botframework-directlinejs';
-import ReactWebChat from 'botframework-webchat';
+// src/Chatbot.js
+import React, { useState } from 'react';
 import axios from 'axios';
 
-const Chatbot = () => {
-  const [directLine, setDirectLine] = useState(null);
+interface Message {
+  text: string;
+  sender: 'user' | 'bot';
+}
 
-  useEffect(() => {
-    const fetchToken = async () => {
+const Chatbot: React.FC = () => {
+  const [messages, setMessages] = useState<Message[]>([]);
+  const [input, setInput] = useState<string>('');
+
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    if (input.trim()) {
+      setMessages([...messages, { text: input, sender: 'user' }]);
+      setInput('');
+
       try {
-        // Make a request to your backend to get the Direct Line token
-        const response = await axios.get('http://localhost:5000/get_direct_line_token'); // Update the URL as needed
-        const token = response.data.token;
+        const response = await axios.post('http://localhost:5000/chatbot', {
+          message: input,
+        });
 
-        // Create Direct Line instance with the token
-        const directLineInstance : DirectLine = new DirectLine({ token });
-        setDirectLine(directLineInstance);
+        setMessages((prev) => [
+          ...prev,
+          { text: response.data.message, sender: 'bot' },
+        ]);
       } catch (error) {
-        console.error("Error fetching the Direct Line token:", error);
+        console.error('Error fetching bot response:', error.response ? error.response.data : error.message);
+        setMessages((prev) => [
+          ...prev,
+          { text: 'Error getting response from the bot', sender: 'bot' },
+        ]);
       }
-    };
+    }
+  };
 
-    fetchToken();
-  }, []);
 
   return (
-    <div style={{ height: '400px', width: '300px', border: '1px solid black' }}>
-      {directLine && (
-        <ReactWebChat 
-          directLine={directLine} 
-          userID="user1" 
-          botID="bot1" 
-          store={createStore({})} // Pass store directly here
+    <div className="flex flex-col h-screen p-4 bg-gray-100">
+      <div className="flex-grow overflow-y-auto p-4 bg-white shadow-lg rounded-lg">
+        {messages.map((msg, index) => (
+          <div key={index} className={`mb-2 ${msg.sender === 'bot' ? 'text-left' : 'text-right'}`}>
+            <div className={`inline-block p-2 rounded-lg ${msg.sender === 'bot' ? 'bg-blue-500 text-white' : 'bg-gray-300 text-black'}`}>
+              {msg.text}
+            </div>
+          </div>
+        ))}
+      </div>
+      <form onSubmit={handleSubmit} className="mt-4 flex">
+        <input
+          type="text"
+          value={input}
+          onChange={(e) => setInput(e.target.value)}
+          placeholder="Type a message..."
+          className="flex-grow p-2 border border-gray-300 rounded-lg focus:outline-none focus:border-blue-500"
         />
-      )}
+        <button type="submit" className="ml-2 p-2 text-white bg-blue-500 rounded-lg">Send</button>
+      </form>
     </div>
   );
 };

@@ -1,11 +1,12 @@
+import Chatbot from '@/components/Chatbot/Chatbot'
 import React from 'react'
 
 type Props = {}
 
-const Chatbot = (props: Props) => {
+const ChatbotSpace = (props: Props) => {
   return (
-    <div>Chatbot</div>
+    <div><Chatbot /></div>
   )
 }
 
-export default Chatbot
+export default ChatbotSpace
