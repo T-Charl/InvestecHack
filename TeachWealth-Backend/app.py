@@ -150,7 +150,9 @@ def model():
         return jsonify({'error': "An error occurred"}), 500
 
 
-
+@app.route("/")
+def home():
+    return "Hello, World!"
 
 @app.route('/get_limit/<category>', methods=['GET'])
 def get_limit(category):

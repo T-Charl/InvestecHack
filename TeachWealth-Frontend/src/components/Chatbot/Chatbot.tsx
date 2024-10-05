@@ -17,16 +17,18 @@ const Chatbot: React.FC = () => {
       setMessages([...messages, { text: input, sender: 'user' }]);
       setInput('');
 
+      console.log('Sending input:', input); // Log input
+
       try {
         const response = await axios.post('http://localhost:5000/chatbot', {
           message: input,
         });
-
+        console.log('Response:', response); // Log the response
         setMessages((prev) => [
           ...prev,
           { text: response.data.message, sender: 'bot' },
         ]);
-      } catch (error) {
+      } catch (error: any) {
         console.error('Error fetching bot response:', error.response ? error.response.data : error.message);
         setMessages((prev) => [
           ...prev,
@@ -35,6 +37,8 @@ const Chatbot: React.FC = () => {
       }
     }
   };
+
+
 
 
   return (
