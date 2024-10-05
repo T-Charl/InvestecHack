@@ -149,6 +149,8 @@ def get_limit(category):
     else:
         return jsonify({"message": "Category limit not set or invalid category"}), 400
 
+
+# Main function
 if __name__ == '__main__':
     # socketio.run(app, debug=True)
     app.run(debug=True)
