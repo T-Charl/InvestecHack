@@ -14,7 +14,6 @@ const Home = (props: Props) => {
           </div>
       </div>
       <div style={{width: '50%'}}>
-          <h1>Home</h1>
       </div>
     </div>
   )
