@@ -50,6 +50,16 @@ def fetch_transactions(account_id, token):
     response = requests.get(url, headers=headers)
     return response.json()["data"]["transactions"]
 
+# Fetch account balance from the API
+def fetch_balance(account_id, token):
+    url = f"https://team2.sandboxpay.co.za/za/pb/v1/accounts/{account_id}/balance"
+    headers = {
+        'Authorization': f"Bearer {token}",
+        'Accept': "application/json"
+    }
+    response = requests.get(url, headers=headers)
+    return response.json()["data"]
+
 # GET categorize transactions
 @app.route('/transactions/<account_id>', methods=['GET'])
 def get_transactions(account_id):
@@ -149,8 +159,12 @@ def get_limit(category):
     else:
         return jsonify({"message": "Category limit not set or invalid category"}), 400
 
+@app.route('/balance/<account_id>', methods=['GET'])
+def get_balance(account_id):
+    token = request.headers.get('Authorization').split(" ")[1]
+    balance = fetch_balance(account_id, token)
+    return jsonify(balance)
 
-# Main function
 if __name__ == '__main__':
     # socketio.run(app, debug=True)
     app.run(debug=True)
