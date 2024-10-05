@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { createStore, Provider } from 'botframework-webchat';
+import { createStore } from 'botframework-webchat';  // Only import createStore
 import { DirectLine } from 'botframework-directlinejs';
 import ReactWebChat from 'botframework-webchat';
 import axios from 'axios';
@@ -15,7 +15,7 @@ const Chatbot = () => {
         const token = response.data.token;
 
         // Create Direct Line instance with the token
-        const directLineInstance = new DirectLine({ token });
+        const directLineInstance : DirectLine = new DirectLine({ token });
         setDirectLine(directLineInstance);
       } catch (error) {
         console.error("Error fetching the Direct Line token:", error);
@@ -28,9 +28,12 @@ const Chatbot = () => {
   return (
     <div style={{ height: '400px', width: '300px', border: '1px solid black' }}>
       {directLine && (
-        <Provider store={createStore({})}>
-          <ReactWebChat directLine={directLine} userID="user1" botID="bot1" />
-        </Provider>
+        <ReactWebChat 
+          directLine={directLine} 
+          userID="user1" 
+          botID="bot1" 
+          store={createStore({})} // Pass store directly here
+        />
       )}
     </div>
   );
