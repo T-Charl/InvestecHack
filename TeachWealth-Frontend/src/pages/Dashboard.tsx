@@ -62,7 +62,7 @@ const Dashboard = (props: Props) => {
                 </div>
 
             </div>
-            <div className='w-[100%]'>
+            <div className='w-[50%] h-[50vh]'>
                 <Chatbot/>
             </div>
         </div>
