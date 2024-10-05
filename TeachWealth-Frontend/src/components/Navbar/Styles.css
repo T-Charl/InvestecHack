@@ -1,69 +1,71 @@
 /* Navbar container */
 .navbar {
-    background-color: #fff; /* Light background for the navbar */
-    padding: 1rem 0; /* Add some padding for height */
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); /* Subtle shadow */
+  background-color: #fff; /* Light background for the navbar */
+  padding: 1rem; /* Add some padding for height */
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); /* Subtle shadow */
+  height: 100vh; /* Full height */
+}
+
+/* Navbar brand (logo or title) */
+.navbar-brand {
+  font-size: 1.5rem;
+  font-weight: bold;
+  color: #000; /* Dark text */
+  text-decoration: none;
+}
+
+/* Navigation items */
+.navbar-nav {
+  display: flex;
+  flex-direction: column; /* Change to column for vertical layout */
+  list-style-type: none;
+  margin: 0;
+  padding: 0;
+}
+
+/* Individual nav items */
+.navbar-nav .nav-item {
+  margin: 0.5rem 0; /* Add vertical margin between items */
+}
+
+/* Nav link styles */
+.navbar-nav .nav-link {
+  color: #000;
+  text-decoration: none;
+  font-size: 1rem;
+  padding: 0.5rem; /* Add some padding for better click area */
+}
+
+/* Hover effects for links */
+.navbar-nav .nav-link:hover {
+  color: #007BFF; /* Blue color on hover */
+  transition: color 0.3s ease-in-out;
+}
+
+/* Active link styling */
+.navbar-nav .nav-link.active {
+  color: #007BFF;
+  font-weight: bold;
+}
+
+/* Flex container */
+.container {
+  display: flex;
+  flex-direction: column; /* Change to column to match vertical navbar */
+  align-items: flex-start; /* Align items to the start */
+}
+
+/* Responsive behavior for small screens */
+@media (max-width: 768px) {
+  .navbar-collapse {
+      flex-direction: column;
+      align-items: flex-start;
   }
-  
-  /* Navbar brand (logo or title) */
-  .navbar-brand {
-    font-size: 1.5rem;
-    font-weight: bold;
-    color: #000; /* Dark text */
-    text-decoration: none;
-  }
-  
-  /* Navigation items */
   .navbar-nav {
-    display: flex;
-    list-style-type: none;
-    margin: 0;
-    padding: 0;
-  }
-  
-  .navbar-nav .nav-item {
-    margin-left: 1rem;
-  }
-  
-  .navbar-nav .nav-link {
-    color: #000;
-    text-decoration: none;
-    font-size: 1rem;
-    padding: 0.5rem;
-  }
-  
-  /* Hover effects for links */
-  .navbar-nav .nav-link:hover {
-    color: #007BFF; /* Blue color on hover */
-    transition: color 0.3s ease-in-out;
-  }
-  
-  /* Active link styling */
-  .navbar-nav .nav-link.active {
-    color: #007BFF;
-    font-weight: bold;
-  }
-  
-  /* Flex container */
-  .container {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-  }
-  
-  /* Responsive behavior for small screens */
-  @media (max-width: 768px) {
-    .navbar-collapse {
-      flex-direction: column;
+      flex-direction: column; /* Ensure vertical stacking on small screens */
       align-items: flex-start;
-    }
-    .navbar-nav {
-      flex-direction: column;
-      align-items: flex-start;
-    }
-    .nav-item {
-      margin-left: 0;
-      margin-bottom: 1rem;
-    }
   }
-  
+  .nav-item {
+      margin: 0.5rem 0; /* Maintain vertical spacing */
+  }
+}

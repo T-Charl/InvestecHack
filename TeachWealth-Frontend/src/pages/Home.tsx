@@ -1,21 +1,14 @@
+import AccountBalance from '@/components/Dashboard/Account/AccountBalance'
 import React from 'react'
+import Dashboard from './Dashboard'
 
 type Props = {}
 
 const Home = (props: Props) => {
   return (
-    <div style={{display: 'flex', backgroundColor: "#ffffff"}}>
-      <div style={{width: '50%'}}>
-          <div>
-
-          </div>
-          <div>
-            
-          </div>
-      </div>
-      <div style={{width: '50%'}}>
-      </div>
-    </div>
+   <div>
+    <Dashboard/>
+   </div>
   )
 }
 

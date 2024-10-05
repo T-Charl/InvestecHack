@@ -1,5 +1,7 @@
 import React from 'react';
+import { Link } from 'react-router-dom';
 import "./Styles.css" // Import the CSS file
+import investecLogo from '@/assets/investec_logo.png'
 
 type Props = {};
 
@@ -9,7 +11,7 @@ const Navbar = (props: Props) => {
       <nav className="navbar">
         <div className="container">
           <a className="navbar-brand" href="#">
-            Investec
+            <img src={investecLogo} alt='Investec logo'width={100} height={100}/>
           </a>
           <div className="navbar-collapse" id="navbarNav">
             <ul className="navbar-nav">
