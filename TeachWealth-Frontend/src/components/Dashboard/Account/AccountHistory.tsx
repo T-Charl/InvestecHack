@@ -2,7 +2,7 @@ import { Card, CardHeader, CardTitle, CardContent, CardFooter } from '@/componen
 import { ChartConfig, ChartContainer, ChartTooltip, ChartTooltipContent } from '@/components/ui/chart';
 import { TrendingUp } from 'lucide-react';
 import React, { useEffect, useState } from 'react';
-import { BarChart, CartesianGrid, XAxis, Bar } from 'recharts';
+import { BarChart, CartesianGrid, XAxis, Bar, Tooltip } from 'recharts';
 
 type Props = {};
 
@@ -14,16 +14,16 @@ const chartConfig: ChartConfig = {
 };
 
 const AccountHistory = (props: Props) => {
-  const [chartData, setChartData] = useState<{ month: string; desktop: number }[]>([]);
+  const [chartData, setChartData] = useState([]);
   const [averageSpend, setAverageSpend] = useState<number | null>(null);
 
   useEffect(() => {
     const fetchTransactions = async () => {
       try {
-        const token = "your_auth_token"; // Replace with your actual token or use context/state
-        const accountId = "your_account_id"; // Replace with your actual account ID
+        const token = "your_auth_token"; // Replace with your actual token
+        const accountId = "4675778129910189600000004"; // Replace with actual account ID
 
-        const response = await fetch(`/transactions/${accountId}`, {
+        const response = await fetch(`https://team2.sandboxpay.co.za/za/pb/v1/accounts/${accountId}/transactions`, {
           method: 'GET',
           headers: {
             'Authorization': `Bearer ${token}`,
@@ -35,8 +35,9 @@ const AccountHistory = (props: Props) => {
           throw new Error('Network response was not ok');
         }
 
-        const transactions = await response.json();
-        const monthlyData = processTransactions(transactions); // Process transactions into monthly data
+        const data = await response.json();
+        const transactions = data.data?.transactions || []; // Ensure transactions is an array
+        const monthlyData: any = processTransactions(transactions); // Process transactions
 
         setChartData(monthlyData);
         calculateAverage(monthlyData);
@@ -48,29 +49,33 @@ const AccountHistory = (props: Props) => {
     fetchTransactions();
   }, []);
 
-  const processTransactions = (transactions: any[]) => {
-    const monthlyTotals: { [key: string]: number } = {};
+  const processTransactions = (transactions: any[] = []) => {
+    const monthlyTotals: any = {};
 
     transactions.forEach((transaction) => {
-      const month = new Date(transaction.date).toLocaleString('default', { month: 'long' });
-      monthlyTotals[month] = (monthlyTotals[month] || 0) + Math.abs(transaction.amount); // Aggregate spendings
+      const actionDate = new Date(transaction.actionDate);
+      const month = actionDate.toLocaleString('default', { month: 'long', year: 'numeric' });
+      monthlyTotals[month] = (monthlyTotals[month] || 0) + Math.abs(Number(transaction.amount));
     });
 
-    // Filter for the last three months
     const currentDate = new Date();
     const lastThreeMonths = new Date(currentDate.setMonth(currentDate.getMonth() - 3));
 
     return Object.entries(monthlyTotals)
-      .filter(([month]) => new Date(month).getTime() >= lastThreeMonths.getTime())
+      .filter(([month]) => {
+        const [monthName, year] = month.split(" ");
+        const dateToCompare = new Date(`${monthName} 1, ${year}`);
+        return dateToCompare >= lastThreeMonths;
+      })
       .map(([month, total]) => ({
         month,
         desktop: total,
       }));
   };
 
-  const calculateAverage = (monthlyData: { month: string; desktop: number }[]) => {
+  const calculateAverage = (monthlyData: any) => {
     if (monthlyData.length > 0) {
-      const totalSpend = monthlyData.reduce((acc, data) => acc + data.desktop, 0);
+      const totalSpend = monthlyData.reduce((acc: any, data: any) => acc + data.desktop, 0);
       const average = totalSpend / monthlyData.length;
       setAverageSpend(average);
     }
@@ -81,7 +86,6 @@ const AccountHistory = (props: Props) => {
       <Card>
         <CardHeader>
           <CardTitle>Account History</CardTitle>
-          {/* <CardDescription>Last 3 Months</CardDescription> */}
         </CardHeader>
         <CardContent>
           <ChartContainer config={chartConfig}>
@@ -92,10 +96,10 @@ const AccountHistory = (props: Props) => {
                 tickLine={false}
                 tickMargin={10}
                 axisLine={false}
-                tickFormatter={(value) => value.slice(0, 3)} // Display first three letters of month
+                tickFormatter={(value) => value.slice(0, 3)} // Shorten month names
               />
-              <ChartTooltip
-                cursor={false}
+              <Tooltip
+                cursor={{ fill: 'rgba(0, 0, 0, 0.1)' }}
                 content={<ChartTooltipContent hideLabel />}
               />
               <Bar dataKey="desktop" fill="var(--color-desktop)" radius={8} />
@@ -103,9 +107,8 @@ const AccountHistory = (props: Props) => {
           </ChartContainer>
         </CardContent>
         <CardFooter className="flex-col items-start gap-2 text-sm">
-          {/* Spending history statistics */}
           <div className="flex gap-2 font-medium leading-none">
-            Average spend: {averageSpend !== null ? `$${averageSpend.toFixed(2)}` : "Loading..."} 
+            Average spend: {averageSpend !== null ? `R${averageSpend.toFixed(2)}` : "Loading..."}
             <TrendingUp className="h-4 w-4" />
           </div>
         </CardFooter>
@@ -115,3 +118,4 @@ const AccountHistory = (props: Props) => {
 };
 
 export default AccountHistory;
+

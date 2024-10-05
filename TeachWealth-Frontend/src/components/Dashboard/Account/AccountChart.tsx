@@ -21,7 +21,7 @@ type Props = {};
 const AccountChart = (props: Props) => {
   const [balance, setBalance] = useState<number | null>(null);
   const [transactions, setTransactions] = useState<any[]>([]);
-  
+
   const chartData = [
     { category: "Accounts", desktop: 120, mobile: 80 },
     { category: "Balances", desktop: 200, mobile: 140 },
@@ -38,16 +38,19 @@ const AccountChart = (props: Props) => {
   };
 
   const TransactionTable = () => {
+    if (!Array.isArray(transactions) || transactions.length === 0) {
+      return <p>No transactions available</p>;
+    }
+
     return (
       <section style={{ padding: '10px' }}>
         <h1 className="text-xl font-bold">Transactions</h1>
-        <table style={{}}>
+        <table>
           <tbody>
             {transactions.map(transaction => (
               <tr key={transaction.id}>
-                <td style={{backgroundColor: getRandomColor(), width: '10px', height: '10px', borderRadius: '50%'}}>{}</td>
-                <td style={{ }}>{transaction.description}</td>
-                <td style={{ }}>R{transaction.amount.toFixed(2)}</td>
+                <td>{transaction.description}</td>
+                <td>R{transaction.amount}</td>
               </tr>
             ))}
           </tbody>
@@ -59,11 +62,11 @@ const AccountChart = (props: Props) => {
   useEffect(() => {
     const fetchData = async () => {
       const token = "your_auth_token"; // Replace with your actual token
-      const accountId = "your_account_id"; // Replace with your actual account ID
-      
+      const accountId = "4675778129910189600000004"; // Replace with your actual account ID
+
       // Fetch account balance
       try {
-        const balanceResponse = await fetch(`/balance/${accountId}`, {
+        const balanceResponse = await fetch(`https://team2.sandboxpay.co.za/za/pb/v1/accounts/${accountId}/balance`, {
           method: 'GET',
           headers: {
             'Authorization': `Bearer ${token}`,
@@ -73,7 +76,7 @@ const AccountChart = (props: Props) => {
 
         if (balanceResponse.ok) {
           const balanceData = await balanceResponse.json();
-          setBalance(balanceData.balance);
+          setBalance(balanceData.data.currentBalance);
         }
       } catch (error) {
         console.error("Error fetching balance:", error);
@@ -81,7 +84,7 @@ const AccountChart = (props: Props) => {
 
       // Fetch transactions
       try {
-        const transactionsResponse = await fetch(`/transactions/${accountId}`, {
+        const transactionsResponse = await fetch(`https://team2.sandboxpay.co.za/za/pb/v1/accounts/${accountId}/transactions`, {
           method: 'GET',
           headers: {
             'Authorization': `Bearer ${token}`,
@@ -91,8 +94,12 @@ const AccountChart = (props: Props) => {
 
         if (transactionsResponse.ok) {
           const transactionsData = await transactionsResponse.json();
-          // Get the last 5 transactions
-          setTransactions(transactionsData.slice(-5));
+          // Check if transactionsData is an array
+          if (Array.isArray(transactionsData.data.transactions)) {
+            setTransactions(transactionsData.data.transactions);
+          } else {
+            console.error("Expected an array of transactions");
+          }
         }
       } catch (error) {
         console.error("Error fetching transactions:", error);
@@ -101,6 +108,7 @@ const AccountChart = (props: Props) => {
 
     fetchData();
   }, []);
+
 
   const chartConfig = {
     visitors: {
@@ -168,7 +176,7 @@ const AccountChart = (props: Props) => {
                             y={viewBox.cy}
                             className="fill-foreground text-3xl font-bold"
                           >
-                            R{totalVisitors.toLocaleString()}
+                            R{balance}
                           </tspan>
                         </text>
                       );
@@ -182,7 +190,7 @@ const AccountChart = (props: Props) => {
         <section style={{ padding: '10px' }}>
           <h1 className="text-xl font-bold">Account Balance</h1>
           <p style={{ fontSize: '24px', fontWeight: 'bold' }}>
-            R{balance !== null ? balance.toFixed(2) : "Loading..."}
+            R{balance !== null ? balance : "Loading..."}
           </p>
           <TransactionTable />
         </section>
