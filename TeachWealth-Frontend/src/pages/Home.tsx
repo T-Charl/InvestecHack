@@ -1,3 +1,4 @@
+import AccountBalance from '@/components/Dashboard/Account/AccountBalance'
 import React from 'react'
 
 type Props = {}
@@ -7,7 +8,7 @@ const Home = (props: Props) => {
     <div style={{display: 'flex', backgroundColor: "#ffffff"}}>
       <div style={{width: '50%'}}>
           <div>
-
+            <AccountBalance/>
           </div>
           <div>
             
