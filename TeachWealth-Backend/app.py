@@ -9,14 +9,13 @@ import os
 
 app = Flask(__name__)
 socketio = SocketIO(app)
-CORS(app)
-
 
 load_dotenv()
 
 key = os.getenv("GEMINI_API")
 
 app = Flask(__name__)
+CORS(app)  
 
 # Categories and their keywords
 categories = {
@@ -168,6 +167,6 @@ def get_balance(account_id):
     return jsonify(balance)
 
 if __name__ == '__main__':
-    # socketio.run(app, debug=True)
-    app.run(debug=True)
+    socketio.run(app, debug=True)
+    # app.run(port=5000,debug=True)
 
