@@ -26,8 +26,8 @@ const AccountHistory = (props: Props) => {
     <div>
          <Card>
       <CardHeader>
-        <CardTitle>Bar Chart</CardTitle>
-        <CardDescription>January - June 2024</CardDescription>
+        <CardTitle>Account History</CardTitle>
+        {/*<CardDescription>January - June 2024</CardDescription>*/}
       </CardHeader>
       <CardContent>
         <ChartContainer config={chartConfig}>
