@@ -75,5 +75,12 @@ def set_limit():
     else:
         return jsonify({"message": "Invalid category"}), 400
 
+@app.route('/get_limit/<category>', methods=['GET'])
+def get_limit(category):
+    if category in category_limits:
+        return jsonify({"category": category, "limit": category_limits[category]}), 200
+    else:
+        return jsonify({"message": "Category limit not set or invalid category"}), 400
+
 if __name__ == '__main__':
     app.run(debug=True)
