@@ -85,7 +85,6 @@ import {
       <div>
         <Card className="flex flex-row">
           <CardContent className="flex-1 pb-0">
-
             <ChartContainer
               config={chartConfig}
               className="mx-auto aspect-square max-h-[250px]"
