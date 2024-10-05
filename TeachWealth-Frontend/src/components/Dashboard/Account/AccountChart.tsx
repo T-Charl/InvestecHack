@@ -186,10 +186,6 @@ const AccountChart = (props: Props) => {
           </ChartContainer>
         </CardContent>
         <section style={{ padding: '10px' }}>
-          <h1 className="text-xl font-bold">Account Balance</h1>
-          <p style={{ fontSize: '24px', fontWeight: 'bold' }}>
-            R{balance !== null ? balance : "Loading..."}
-          </p>
           <TransactionTable />
         </section>
       </Card>
